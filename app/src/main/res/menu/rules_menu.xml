@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_import"
+        android:title="导入 hosts" />
+    <item
+        android:id="@+id/menu_export"
+        android:title="导出 hosts" />
+    <item
+        android:id="@+id/menu_add_subscription"
+        android:title="添加订阅" />
+    <item
+        android:id="@+id/menu_discover"
+        android:title="发现常用规则" />
+    <item
+        android:id="@+id/menu_refresh_subscription"
+        android:title="更新订阅" />
+    <item
+        android:id="@+id/menu_new_group"
+        android:title="新建规则组" />
+    <item
+        android:id="@+id/menu_rename_group"
+        android:title="重命名当前组" />
+    <item
+        android:id="@+id/menu_delete_group"
+        android:title="删除当前组" />
+</menu>

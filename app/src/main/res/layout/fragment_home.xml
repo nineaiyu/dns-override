@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fillViewport="true"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/screen_margin"
+        android:paddingEnd="@dimen/screen_margin"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingBottom="@dimen/space_xxl">
+
+        <!-- Hero 状态卡：极光渐变 + 玻璃拟态。
+             渐变设为内容 FrameLayout 的 background（绘制在内容底下、随内容高、不撑高） -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/heroCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="@dimen/radius_lg"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:strokeWidth="0dp"
+            android:clipToOutline="true">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero_gradient">
+
+                <!-- 装饰性玻璃圆（营造空间感，负 margin 溢出部分被 clipToOutline 裁掉） -->
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-46dp"
+                    android:layout_marginEnd="-34dp"
+                    android:background="@drawable/bg_glass_circle"
+                    android:alpha="0.45" />
+
+                <View
+                    android:layout_width="92dp"
+                    android:layout_height="92dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="-26dp"
+                    android:layout_marginBottom="-26dp"
+                    android:background="@drawable/bg_glass_circle"
+                    android:alpha="0.32" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <FrameLayout
+                            android:id="@+id/statusIconWrap"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp">
+
+                            <ImageView
+                                android:id="@+id/statusPulse"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:src="@drawable/bg_status_active"
+                                android:visibility="gone"
+                                tools:ignore="ContentDescription" />
+
+                            <ImageView
+                                android:id="@+id/statusIcon"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_shield_alert"
+                                app:tint="@color/glass_text"
+                                android:background="@drawable/bg_glass_circle"
+                                android:padding="12dp"
+                                tools:ignore="ContentDescription" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/space_md">
+
+                            <TextView
+                                android:id="@+id/statusTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/home_status_unprotected"
+                                android:textAppearance="@style/TextAppearance.DnsOverride.TitleLarge"
+                                android:textColor="@color/glass_text" />
+
+                            <TextView
+                                android:id="@+id/statusSub"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xxs"
+                                android:text="@string/home_vpn_inactive"
+                                android:textSize="@dimen/text_caption"
+                                android:letterSpacing="0.02"
+                                android:textColor="@color/glass_text_secondary" />
+                        </LinearLayout>
+
+                        <!-- 大开关 -->
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switchProtect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:thumbTint="@color/glass_text"
+                            tools:ignore="ContentDescription" />
+                    </LinearLayout>
+
+                    <!-- 玻璃信息 chip 行：运行时长 + 上游 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/space_lg">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/bg_glass_chip"
+                            android:paddingStart="@dimen/space_sm"
+                            android:paddingTop="7dp"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="7dp">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:src="@drawable/ic_clock"
+                                app:tint="@color/glass_text_secondary"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/uptimeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/home_uptime"
+                                android:textSize="@dimen/text_caption"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/glass_text" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/space_xs"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/bg_glass_chip"
+                            android:paddingStart="@dimen/space_sm"
+                            android:paddingTop="7dp"
+                            android:paddingEnd="@dimen/space_sm"
+                            android:paddingBottom="7dp">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:src="@drawable/ic_globe"
+                                app:tint="@color/glass_text_secondary"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/upstreamText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:ellipsize="end"
+                                android:singleLine="true"
+                                android:text="@string/home_upstream"
+                                android:textSize="@dimen/text_caption"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/glass_text" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 概览小标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:layout_marginBottom="@dimen/space_sm"
+            android:text="@string/home_overview"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Overline"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <!-- 指标卡 2x2 网格 -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false">
+
+            <include
+                android:id="@+id/metricQueries"
+                layout="@layout/item_metric_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:layout_marginBottom="@dimen/space_xs" />
+
+            <include
+                android:id="@+id/metricBlocked"
+                layout="@layout/item_metric_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_marginStart="@dimen/space_xs"
+                android:layout_marginBottom="@dimen/space_xs" />
+
+            <include
+                android:id="@+id/metricCache"
+                layout="@layout/item_metric_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="@dimen/space_xs"
+                android:layout_marginEnd="@dimen/space_xs" />
+
+            <include
+                android:id="@+id/metricForward"
+                layout="@layout/item_metric_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="@dimen/space_xs"
+                android:layout_marginStart="@dimen/space_xs" />
+        </GridLayout>
+
+        <!-- 最近活动 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/space_lg"
+            android:layout_marginBottom="@dimen/space_sm">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/home_recent_activity"
+                android:textAppearance="@style/TextAppearance.DnsOverride.Title" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoRules"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_rules"
+                android:textColor="?attr/colorPrimary"
+                app:icon="@drawable/ic_chevron_right"
+                app:iconSize="16dp"
+                app:iconGravity="end" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.DnsOverride.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/recentEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_padding"
+                    android:gravity="center"
+                    android:text="@string/home_no_activity"
+                    android:textAppearance="@style/TextAppearance.DnsOverride.Body"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:padding="@dimen/space_xs"
+                    tools:listitem="@layout/item_log_compact"
+                    tools:itemCount="4" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================
+         Aurora 设计系统 · 浅色
+         品牌：皇家靛蓝 + 极光渐变（靛 → 紫 → 青）
+         层级：微蓝灰背景 + 纯白卡片 + 细腻描边
+         ============================================================ -->
+
+    <!-- 品牌色 -->
+    <color name="brand_primary">#2F50E1</color>
+    <color name="brand_primary_dark">#B4C5FF</color>
+    <color name="brand_on_primary">#FFFFFF</color>
+    <color name="brand_primary_container">#DCE3FF</color>
+    <color name="brand_on_primary_container">#00145C</color>
+    <color name="brand_secondary">#008577</color>        <!-- 极光青，成功/强调 -->
+    <color name="brand_secondary_dark">#5BE3D2</color>
+    <color name="brand_tertiary">#B25E09</color>        <!-- 琥珀，提醒/流量 -->
+
+    <!-- 语义状态色 -->
+    <color name="success">#12B76A</color>
+    <color name="warning">#F79009</color>
+    <color name="danger">#F04438</color>
+    <color name="info">#2E90FA</color>
+
+    <!-- 透明辅助 -->
+    <color name="brand_primary_08">#142F50E1</color>
+    <color name="brand_primary_12">#1F2F50E1</color>
+    <color name="brand_tertiary_12">#1FB25E09</color>
+    <color name="surface_scrim">#52000000</color>
+
+    <!-- 玻璃拟态（Hero 卡片上的白色半透明元素） -->
+    <color name="glass_white_10">#1AFFFFFF</color>
+    <color name="glass_white_16">#29FFFFFF</color>
+    <color name="glass_white_24">#3DFFFFFF</color>
+    <color name="glass_border">#38FFFFFF</color>
+    <color name="glass_text">#FFFFFF</color>
+    <color name="glass_text_secondary">#CCFFFFFF</color>
+    <color name="glass_text_tertiary">#99FFFFFF</color>
+
+    <!-- Hero 极光渐变端色（深浅主题共用，深邃不刺眼） -->
+    <color name="aurora_deep">#0A1230</color>
+    <color name="aurora_indigo">#1E2E78</color>
+    <color name="aurora_violet">#5B3DF5</color>
+    <color name="aurora_cyan">#22D3EE</color>
+
+    <!-- ===== Material3 语义 token（浅色） ===== -->
+    <color name="seed">#2F50E1</color>
+    <color name="md_theme_light_primary">#2F50E1</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#DCE3FF</color>
+    <color name="md_theme_light_onPrimaryContainer">#00145C</color>
+    <color name="md_theme_light_secondary">#47588A</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#D9E2FF</color>
+    <color name="md_theme_light_onSecondaryContainer">#0E1B3C</color>
+    <color name="md_theme_light_tertiary">#8C5100</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFDCBE</color>
+    <color name="md_theme_light_onTertiaryContainer">#2C1600</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    <color name="md_theme_light_background">#F7F9FD</color>
+    <color name="md_theme_light_onBackground">#15181F</color>
+    <color name="md_theme_light_surface">#F7F9FD</color>
+    <color name="md_theme_light_surfaceVariant">#DFE2F0</color>
+    <color name="md_theme_light_onSurface">#15181F</color>
+    <color name="md_theme_light_onSurfaceVariant">#44465A</color>
+    <color name="md_theme_light_surfaceContainerLowest">#FFFFFF</color>
+    <color name="md_theme_light_surfaceContainerLow">#F1F4FB</color>
+    <color name="md_theme_light_surfaceContainer">#EBEFF8</color>
+    <color name="md_theme_light_surfaceContainerHigh">#E5E9F3</color>
+    <color name="md_theme_light_surfaceContainerHighest">#DFE3EE</color>
+    <color name="md_theme_light_outline">#74768A</color>
+    <color name="md_theme_light_outlineVariant">#C6C8DB</color>
+    <color name="md_theme_light_inverseSurface">#2A2D34</color>
+    <color name="md_theme_light_inverseOnSurface">#EEF0F8</color>
+
+    <!-- 卡片表面：浅色为纯白（高于背景），深色由 values-night 覆盖为提亮色 -->
+    <color name="card_surface">#FFFFFF</color>
+
+    <!-- 兼容旧引用 -->
+    <color name="purple_500">#2F50E1</color>
+    <color name="purple_700">#1E3FC0</color>
+    <color name="teal_200">#5BE3D2</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="text_primary">@color/md_theme_light_onSurface</color>
+    <color name="text_secondary">@color/md_theme_light_onSurfaceVariant</color>
+</resources>

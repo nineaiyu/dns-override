@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 深色模式下系统栏图标为浅色，与深色背景协调。
+         以下属性均高于 minSdk，用 tools:targetApi 标注其引入版本：
+         低版本平台会忽略未知属性，不会崩溃。 -->
+    <style name="Theme.DnsOverride" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+    </style>
+</resources>

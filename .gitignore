@@ -1,0 +1,51 @@
+# ===== Gradle =====
+*.iml
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+local.properties
+
+# ===== IDE =====
+.idea/
+*.ipr
+*.iws
+.navigation/
+.project
+.settings/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== 构建产物 =====
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+release/
+app/build/
+app/release/
+
+# ===== 签名与密钥（绝不入库）=====
+*.keystore
+*.jks
+keystore.properties
+!keystore.properties.example
+
+# ===== 本地/临时 =====
+*.log
+*.hprof
+.cxx/
+reports/
+
+# ===== 密钥与环境变量 =====
+.env
+.env.*
+!.env.example

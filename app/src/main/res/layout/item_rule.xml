@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.DnsOverride.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/space_xs"
+    android:layout_marginVertical="@dimen/space_xxs"
+    app:cardCornerRadius="@dimen/radius_sm">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_md"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_sm"
+        android:paddingEnd="@dimen/space_xs">
+
+        <!-- 多选勾选（多选模式可见） -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_sm"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- 拖拽手柄 -->
+        <ImageButton
+            android:id="@+id/imgDrag"
+            android:layout_width="32dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_drag_handle"
+            android:src="@drawable/ic_drag"
+            android:scaleType="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- 左侧动作色图标（squircle） -->
+        <FrameLayout
+            android:id="@+id/iconBadge"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="@dimen/space_sm">
+
+            <View
+                android:id="@+id/iconBadgeBg"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_card" />
+
+            <ImageView
+                android:id="@+id/iconAction"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_discover"
+                app:tint="@color/brand_primary"
+                tools:ignore="ContentDescription" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textDomain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.DnsOverride.Title"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="example.com" />
+
+            <TextView
+                android:id="@+id/textIp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="→ 192.168.0.200" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAction"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:checkable="false"
+                android:textSize="@dimen/text_caption"
+                tools:text="@string/rule_action_override" />
+
+            <TextView
+                android:id="@+id/textNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone"
+                tools:text="备注"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <!-- 冲突提示 -->
+        <ImageView
+            android:id="@+id/imgConflict"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:contentDescription="@string/cd_rule_conflict"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- 开关 -->
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchEnabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_xxs" />
+
+        <ImageButton
+            android:id="@+id/btnEdit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_edit_rule"
+            android:src="@drawable/ic_edit"
+            android:scaleType="center"
+            app:tint="?attr/colorOnSurfaceVariant" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_delete_rule"
+            android:src="@drawable/ic_delete"
+            android:scaleType="center"
+            app:tint="@color/danger" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

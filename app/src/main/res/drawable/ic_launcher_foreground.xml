@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 盾牌轮廓，居中于 108x108（安全区 66x66，从 (21,21) 到 (87,87)） -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,28L36,36v18c0,12.45 7.68,23.66 18,27 10.32,-3.34 18,-14.55 18,-27L72,36L54,28zM54,42
+            a8,8 0 1,1 -0.01,0z" />
+    <!-- 简化 DNS 字形，用三条横线代表网络/解析 -->
+    <path
+        android:fillColor="#FF1565C0"
+        android:pathData="M42,52h24v3h-24zM42,58h24v3h-24zM42,64h16v3h-16z" />
+</vector>

@@ -1,0 +1,232 @@
+<resources>
+    <string name="app_name">DNS Override</string>
+    <string name="app_tagline">智能 DNS 拦截与隐私卫士</string>
+
+    <!-- Tab 标题 -->
+    <string name="tab_home">首页</string>
+    <string name="tab_rules">规则</string>
+    <string name="tab_stats">统计</string>
+    <string name="tab_settings">设置</string>
+
+    <!-- Quick Settings Tile -->
+    <string name="tile_state_on">已启用</string>
+    <string name="tile_state_off">已停用</string>
+
+    <!-- 常驻通知 -->
+    <string name="notif_title">DNS Override 正在运行</string>
+    <string name="notif_running">正在运行</string>
+    <string name="notif_action_stop">停止</string>
+    <string name="notif_stats">已拦截 %1$d 条 DNS 查询 | 转发 %2$d 条</string>
+    <string name="notif_channel_desc">VPN 运行状态</string>
+
+    <!-- 首页 -->
+    <string name="home_status_protected">已保护</string>
+    <string name="home_status_unprotected">未保护</string>
+    <string name="home_start">开启保护</string>
+    <string name="home_stop">停止保护</string>
+    <string name="home_uptime">已运行 %1$s</string>
+    <string name="home_upstream">上游 %1$s</string>
+    <string name="home_metric_queries">查询总数</string>
+    <string name="home_metric_blocked">已拦截</string>
+    <string name="home_metric_cache">缓存命中</string>
+    <string name="home_metric_forward">已转发</string>
+    <string name="home_recent_activity">最近活动</string>
+    <string name="home_no_activity">暂无活动，开启保护后这里会显示实时拦截记录</string>
+    <string name="home_active_rules">生效规则</string>
+    <string name="home_vpn_active">VPN 运行中</string>
+    <string name="home_vpn_inactive">VPN 未启动</string>
+    <string name="home_overview">今日概览</string>
+    <string name="state_starting">启动中…</string>
+    <string name="state_stopping">停止中…</string>
+    <string name="state_starting_desc">正在建立加密隧道</string>
+    <string name="state_stopping_desc">正在断开</string>
+    <string name="home_upstream_doh">DoH · %1$s</string>
+    <string name="home_upstream_udp">UDP · %1$s</string>
+
+    <!-- 查询日志来源 -->
+    <string name="log_blocked">已拦截</string>
+    <string name="log_blocked_aaaa">已拦截 IPv6</string>
+    <string name="log_redirected">已重定向 → %1$s</string>
+    <string name="log_cache_hit">缓存命中</string>
+    <string name="log_forwarded">已转发 → %1$s</string>
+    <string name="log_upstream_failed">上游失败</string>
+
+    <!-- 规则 -->
+    <string name="rules_search_hint">搜索域名或备注</string>
+    <string name="rules_filter_all">全部</string>
+    <string name="rules_filter_override">重定向 %1$d</string>
+    <string name="rules_filter_block">拦截 %1$d</string>
+    <string name="rules_filter_direct">直连 %1$d</string>
+    <!-- 动作名称（无计数的独立文案，供编辑对话框 / Chip 使用） -->
+    <string name="rule_action_override">重定向</string>
+    <string name="rule_action_block">拦截</string>
+    <string name="rule_action_direct">直连</string>
+    <string name="rules_empty">还没有规则，点击下方按钮添加</string>
+    <string name="rules_selected_count">已选 %1$d 项</string>
+    <string name="rules_clear_selection">取消</string>
+    <string name="rules_delete_selected">删除所选</string>
+    <string name="rules_toggle_selected">批量开关</string>
+    <string name="rules_import">导入</string>
+    <string name="rules_export">导出</string>
+    <string name="rules_discover">发现订阅</string>
+    <string name="rules_group_hint">拖拽手柄可调整优先级（靠前的规则优先匹配）</string>
+    <string name="rules_conflict">存在 %1$d 处冲突</string>
+    <string name="rules_switch_group">切换组</string>
+
+    <!-- 统计 -->
+    <string name="stats_title">数据看板</string>
+    <string name="stats_block_rate">拦截率</string>
+    <string name="stats_cache_rate">缓存命中率</string>
+    <string name="stats_top_domains">高频域名 Top 10</string>
+    <string name="stats_recent">最近查询</string>
+    <string name="stats_empty">暂无数据，开启保护后这里会统计 DNS 活动</string>
+    <string name="stats_total">累计查询</string>
+    <string name="stats_trend">24 小时趋势</string>
+    <string name="stats_refresh">刷新</string>
+    <string name="stats_reset">重置</string>
+    <string name="stats_cleared">统计已重置</string>
+    <string name="stats_reset_title">重置统计</string>
+    <string name="stats_reset_message">确定清空所有统计数据？</string>
+    <string name="stats_reset_confirm">重置</string>
+    <string name="stats_peak">今日峰值 %1$s 次/时</string>
+    <string name="stats_exported">已导出 %1$d 条日志</string>
+    <string name="stats_no_logs">暂无日志可导出</string>
+    <string name="log_tag_hit">命中</string>
+    <string name="log_tag_forward">转发</string>
+    <string name="log_result_arrow">→ %1$s</string>
+    <string name="vpn_permission_denied">未授予 VPN 权限，无法开启保护</string>
+    <string name="vpn_permission_denied_short">未授予 VPN 权限</string>
+    <string name="stats_cache_rate_value">缓存命中率 %1$.1f%%</string>
+    <string name="stats_upstream_udp">UDP 53（默认）</string>
+    <string name="stats_upstream_doh">DNS-over-HTTPS</string>
+
+    <!-- 设置 -->
+    <string name="settings_header_general">通用</string>
+    <string name="settings_header_upstream">上游 DNS</string>
+    <string name="settings_header_appearance">外观</string>
+    <string name="settings_header_about">关于</string>
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_system">跟随系统</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+    <string name="settings_doh">DNS-over-HTTPS 上游</string>
+    <string name="settings_boot">开机自动启动</string>
+    <string name="settings_cache">DNS 缓存</string>
+    <string name="settings_about_app">DNS Override 是一款基于 VPN 的本地 DNS 拦截工具，支持 UDP/TCP/DoH，保护你的隐私与网络体验。</string>
+    <string name="settings_upstream_hint">留空或全部非法时使用内置列表（8.8.8.8 / 1.1.1.1 / 223.5.5.5）</string>
+    <string name="settings_cache_size">缓存容量</string>
+    <string name="settings_cache_size_value">%1$d 条</string>
+    <string name="settings_forward_ttl_hint">转发上游的响应会改写为该 TTL 再交给系统。过大：切换规则后短暂不生效；为 0：系统每次都重新查询，网络差时明显变慢。建议 10。</string>
+    <string name="settings_header_blocking">屏蔽设置</string>
+    <string name="settings_block_aaaa">屏蔽 AAAA（IPv6 查询返回空，IPv4-only 环境防卡）</string>
+    <string name="settings_block_mode">屏蔽规则的应答方式</string>
+    <string name="settings_block_mode_zero">0.0.0.0</string>
+    <string name="settings_block_mode_nxdomain">NXDOMAIN</string>
+    <string name="settings_app_exclusion">按应用排除</string>
+    <string name="settings_app_exclusion_hint">被排除的应用不经过 VPN（银行/游戏类 App 检测到 VPN 可能拒绝联网）。修改后自动重建隧道。</string>
+    <string name="settings_app_exclusion_pick">选择排除的应用</string>
+    <string name="settings_app_exclusion_none">未排除任何应用</string>
+    <string name="settings_app_exclusion_count">已排除 %1$d 个应用</string>
+    <string name="settings_diagnostics">诊断</string>
+    <string name="settings_diag_resolve">测试解析</string>
+    <string name="settings_diag_upstream">测试上游</string>
+    <string name="settings_diag_domain_hint">要测试的域名</string>
+    <string name="settings_diag_title">DNS 诊断结果</string>
+    <string name="settings_diag_empty_domain">请先输入域名</string>
+    <string name="settings_diag_failed">诊断失败: %1$s</string>
+    <string name="settings_sub_auto_update">订阅规则自动更新（VPN 启动时检查，超过 24 小时自动拉取）</string>
+    <string name="settings_picker_title">选择不经过 VPN 的应用</string>
+    <string name="settings_picker_empty">未找到可排除的应用</string>
+
+    <!-- 规则编辑对话框 -->
+    <string name="rule_edit_title_add">添加规则</string>
+    <string name="rule_edit_title_edit">编辑规则</string>
+    <string name="rule_error_domain_invalid">域名格式无效</string>
+    <string name="rule_error_ip_invalid">IP 格式无效</string>
+
+    <!-- 规则页提示文案 -->
+    <string name="rules_no_group">请先选择规则组</string>
+    <string name="rules_no_group_to_create">请先创建或选择规则组</string>
+    <string name="rules_import_empty">未解析到任何规则</string>
+    <string name="rules_exported">已导出 %1$d 条规则</string>
+    <string name="rules_imported">已导入 %1$d 条规则到新组「%2$s」</string>
+    <string name="rules_appended">已追加 %1$d 条规则</string>
+    <string name="rules_batch_enabled">已批量启用 %1$d 条</string>
+    <string name="rules_batch_disabled">已批量停用 %1$d 条</string>
+    <string name="rules_nothing_to_select">当前没有可选的规则</string>
+    <string name="rules_delete_confirm">确定删除选中的 %1$d 条规则？此操作不可撤销。</string>
+    <string name="rules_import_title">导入 %1$d 条规则</string>
+    <string name="rules_import_target">来源：%1$s\n选择导入方式：</string>
+    <string name="rules_import_new_group">新建规则组</string>
+    <string name="rules_import_append">追加到当前编辑组</string>
+    <string name="rules_conflict_item">• %1$s</string>
+    <string name="progress_loading">加载中…</string>
+
+    <!-- 规则组管理 -->
+    <string name="rules_active_group">当前规则组：%1$s · %2$d 条（启用 %3$d）</string>
+    <string name="rules_active_group_subscription">当前规则组：%1$s · %2$d 条（启用 %3$d）（订阅）</string>
+    <string name="rules_switch_group_title">选择要编辑的规则组</string>
+    <string name="rules_no_group_available">暂无规则组，请先创建</string>
+    <string name="rules_new_group_title">新建规则组</string>
+    <string name="rules_new_group_hint">规则组名称</string>
+    <string name="rules_create">创建</string>
+    <string name="rules_name_empty">名称不能为空</string>
+    <string name="rules_rename_group_title">重命名规则组</string>
+    <string name="rules_delete_group_title">删除规则组</string>
+    <string name="rules_delete_group_message">确定删除「%1$s」？组内所有规则将一并删除。</string>
+    <string name="rules_reorder_requires_no_filter">请先清空搜索与筛选，再拖拽调整优先级</string>
+
+    <!-- 订阅 -->
+    <string name="rules_discover_title">发现常用规则</string>
+    <string name="rules_discover_hint">选择一个公开 hosts 列表，作为订阅组添加并立即拉取。内容由第三方维护，请自行甄别。</string>
+    <string name="rules_discover_empty">暂无可发现的常用规则</string>
+    <string name="rules_discover_already">该订阅已添加，可在「更新订阅」中刷新</string>
+    <string name="rules_discover_state_added">已添加，点击更新</string>
+    <string name="rules_discover_state_add">点击添加为订阅组</string>
+    <string name="rules_discover_meta">%1$s · 社区维护</string>
+    <string name="rules_subscription_title">添加订阅</string>
+    <string name="rules_subscription_hint">https://example.com/hosts.txt</string>
+    <string name="rules_subscription_message">支持 hosts 格式（IP 域名）或纯域名列表（自动按屏蔽处理），\n0.0.0.0/127.0.0.1 的 hosts 条目也会转为屏蔽规则。</string>
+    <string name="rules_subscription_add">添加并拉取</string>
+    <string name="rules_subscription_invalid_url">请输入 http(s) 地址</string>
+    <string name="rules_subscription_fetching">正在拉取订阅…</string>
+    <string name="rules_subscription_updating">正在更新订阅…</string>
+    <string name="rules_subscription_success">订阅成功，共 %1$d 条规则</string>
+    <string name="rules_subscription_updated">已更新 %1$d 条规则</string>
+    <string name="rules_subscription_not_subscription">当前组不是订阅组（可通过菜单「添加订阅」创建）</string>
+    <string name="rules_subscription_preset_fetching">正在订阅「%1$s」…</string>
+    <string name="rules_subscription_preset_success">「%1$s」订阅成功，共 %2$d 条规则</string>
+
+    <!-- 无障碍：内容描述 -->
+    <string name="cd_drag_handle">拖拽调整优先级</string>
+    <string name="cd_edit_rule">编辑规则</string>
+    <string name="cd_delete_rule">删除规则</string>
+    <string name="cd_rule_conflict">该规则存在冲突</string>
+    <string name="cd_select_all">全选</string>
+    <string name="cd_status_icon">保护状态</string>
+    <string name="cd_protect_switch">开启或停止 DNS 保护</string>
+
+    <!-- 通用 -->
+    <string name="action_add">添加</string>
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_clear">清空</string>
+    <string name="action_delete">删除</string>
+    <string name="action_confirm">确定</string>
+    <string name="action_close">关闭</string>
+    <string name="common_domain">域名</string>
+    <string name="common_target">目标</string>
+    <string name="common_note">备注</string>
+    <string name="common_action">动作</string>
+    <string name="common_enabled">启用</string>
+    <string name="common_empty">暂无数据</string>
+    <string name="common_loading">加载中…</string>
+    <string name="common_none">（无）</string>
+    <string name="common_error_generic">操作失败，请重试</string>
+
+    <!-- 规则条目结果文案 -->
+    <string name="rule_result_blocked">丢弃请求</string>
+    <string name="rule_result_direct">直连上游</string>
+    <string name="toast_saved">已保存</string>
+    <string name="toast_deleted">已删除</string>
+</resources>

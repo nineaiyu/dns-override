@@ -1,0 +1,47 @@
+<resources>
+    <!-- Aurora 排版系统：紧凑字距 + 中等字重，营造现代高级感 -->
+    <style name="TextAppearance.DnsOverride.Display" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:textSize">@dimen/text_display</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">@dimen/text_headline</item>
+        <item name="android:letterSpacing">-0.015</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">@dimen/text_title_lg</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.Label" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    <style name="TextAppearance.DnsOverride.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    <!-- 大数字（指标卡/统计） -->
+    <style name="TextAppearance.DnsOverride.Number" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">@dimen/text_headline</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    <!-- 区块小标题（全大写感、宽字距） -->
+    <style name="TextAppearance.DnsOverride.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.08</item>
+    </style>
+</resources>

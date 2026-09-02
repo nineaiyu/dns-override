@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用问题 / 讨论
+    url: https://github.com/nineaiyu/dns-override/discussions
+    about: 使用方式、配置咨询请先到 Discussions 提问。
+  - name: 安全漏洞
+    url: https://github.com/nineaiyu/dns-override/blob/main/SECURITY.md
+    about: 请勿公开提交漏洞，请按 SECURITY.md 中的渠道私下报告。

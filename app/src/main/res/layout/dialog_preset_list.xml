@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/space_md"
+        android:paddingEnd="@dimen/space_md"
+        android:paddingBottom="@dimen/space_sm"
+        android:text="@string/rules_discover_hint"
+        android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/presetList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never" />
+</LinearLayout>

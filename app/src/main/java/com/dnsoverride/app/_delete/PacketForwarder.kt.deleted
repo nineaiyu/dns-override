@@ -1,0 +1,425 @@
+package com.printhub.dnsoverride.util
+
+import android.net.VpnService
+import android.util.Log
+import com.printhub.dnsoverride.service.TunBridge
+import java.io.IOException
+import java.io.InputStream
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
+import java.net.Socket
+import java.net.SocketException
+import java.util.concurrent.ConcurrentHashMap
+
+/**
+ * 非 DNS 流量透传：基于 protect(socket) 绕过 TUN，避免回环。
+ *
+ * - UDP：按 4-tuple 维护 [DatagramSocket]，接收响应时做 NAT 后写回 TUN。
+ * - TCP：按 4-tuple 维护 [Socket]，桥接 client↔socket，并在 TUN 侧维护
+ *   序列号 (seq/ack) 重写，使客户端的 TCP 栈能与我们的虚拟服务端正常握手。
+ *
+ * 设计取舍：本类不实现完整的用户态 TCP 栈（不处理重传、乱序、窗口缩放）。
+ * 在低负载、低延迟的本地测试场景下足够稳定；如需更严谨的 TCP 行为，
+ * 应引入 lwip 之类的用户态协议栈。详见 spec §6 关键技术难点。
+ *
+ * @param vpnService 用于 [VpnService.protect]
+ * @param bridge TUN 输出回写接口，由 [DnsVpnService] 实现
+ */
+class PacketForwarder(
+    private val vpnService: VpnService,
+    private val bridge: TunBridge
+) {
+    private val udpSessions = ConcurrentHashMap<String, UdpSession>()
+    private val tcpSessions = ConcurrentHashMap<String, TcpSession>()
+
+    private val executor = java.util.concurrent.Executors.newCachedThreadPool { r ->
+        Thread(r, "pkt-forwarder").apply { isDaemon = true }
+    }
+
+    /** 入口：处理一个 IP 包。 */
+    fun forward(packet: ByteArray) {
+        try {
+            when (IpPacket.protocol(packet)) {
+                IpPacket.PROTO_UDP -> handleUdp(packet)
+                IpPacket.PROTO_TCP -> handleTcp(packet)
+                else -> {
+                    // ICMP/其他：丢弃（不影响 DNS 与主流 Web 流量）
+                }
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "forward failed: ${t.message}")
+        }
+    }
+
+    /** 关闭所有会话，释放资源。 */
+    fun shutdown() {
+        udpSessions.values.forEach { runCatching { it.socket.close() } }
+        udpSessions.clear()
+        tcpSessions.values.forEach { it.close() }
+        tcpSessions.clear()
+    }
+
+    // ----------------------------- UDP -----------------------------
+
+    private fun handleUdp(packet: ByteArray) {
+        val ihl = IpPacket.headerLength(packet)
+        val srcPort = IpPacket.srcPort(packet)
+        val dstPort = IpPacket.dstPort(packet)
+        val srcIp = IpPacket.srcIp(packet)
+        val dstIp = IpPacket.dstIp(packet)
+        if (dstPort == 53 || srcPort == 53) return // DNS 不在此处理
+
+        val key = udpKey(srcIp, srcPort, dstIp, dstPort)
+        val payloadLen = packet.size - ihl - 8
+        if (payloadLen <= 0) return
+
+        var session = udpSessions[key]
+        if (session == null) {
+            val socket = DatagramSocket()
+            if (!vpnService.protect(socket)) {
+                runCatching { socket.close() }
+                Log.w(TAG, "protect udp failed")
+                return
+            }
+            socket.soTimeout = UDP_TIMEOUT_MS
+            session = UdpSession(socket, srcIp, srcPort, dstIp, dstPort)
+            udpSessions[key] = session
+            executor.execute { udpRelayLoop(key, session) }
+        }
+
+        val payload = packet.copyOfRange(ihl + 8, packet.size)
+        try {
+            session.socket.send(
+                DatagramPacket(payload, payload.size, InetAddress.getByAddress(dstIp), dstPort)
+            )
+        } catch (e: IOException) {
+            Log.w(TAG, "udp send failed: ${e.message}")
+            udpSessions.remove(key)
+            runCatching { session.socket.close() }
+        }
+    }
+
+    private fun udpRelayLoop(key: String, session: UdpSession) {
+        val buf = ByteArray(32767)
+        while (!Thread.interrupted()) {
+            val received = try {
+                val dp = DatagramPacket(buf, buf.size)
+                session.socket.receive(dp)
+                dp.length
+            } catch (e: SocketException) {
+                break // socket closed
+            } catch (e: IOException) {
+                break
+            }
+            if (received <= 0) continue
+            val payload = buf.copyOfRange(0, received)
+            val ipOut = buildIpUdpPacket(
+                srcIp = session.dstIp, srcPort = session.dstPort,
+                dstIp = session.srcIp, dstPort = session.srcPort,
+                payload = payload
+            )
+            bridge.writeToTun(ipOut)
+        }
+        udpSessions.remove(key)
+    }
+
+    // ----------------------------- TCP -----------------------------
+
+    private fun handleTcp(packet: ByteArray) {
+        val ihl = IpPacket.headerLength(packet)
+        val srcIp = IpPacket.srcIp(packet)
+        val dstIp = IpPacket.dstIp(packet)
+        val srcPort = IpPacket.srcPort(packet)
+        val dstPort = IpPacket.dstPort(packet)
+        val seq = u32(packet, ihl + 4)
+        val ack = u32(packet, ihl + 8)
+        val dataOff = ((packet[ihl + 12].toInt() and 0xf0) shr 4) * 4
+        val flags = packet[ihl + 13].toInt() and 0xff
+        val payloadLen = packet.size - ihl - dataOff
+
+        val key = tcpKey(srcIp, srcPort, dstIp, dstPort)
+        val syn = (flags and 0x02) != 0
+        val ackFlag = (flags and 0x10) != 0
+        val fin = (flags and 0x01) != 0
+        val rst = (flags and 0x04) != 0
+
+        if (rst) {
+            tcpSessions.remove(key)?.close()
+            return
+        }
+
+        var session = tcpSessions[key]
+        if (syn && !ackFlag) {
+            // 新连接：握手第一步
+            if (session != null) {
+                // 重复 SYN，重置已有 session
+                session.close()
+                tcpSessions.remove(key)
+            }
+            session = TcpSession(
+                clientIp = srcIp, clientPort = srcPort,
+                remoteIp = dstIp, remotePort = dstPort,
+                clientSeq = (seq + 1).toLong() and 0xffffffffL,
+                serverSeq = (Math.random() * 0xffffffffL).toLong()
+            )
+            tcpSessions[key] = session
+
+            // 异步打开真实 socket
+            executor.execute {
+                val socket = Socket()
+                try {
+                    if (!vpnService.protect(socket)) {
+                        Log.w(TAG, "protect tcp failed")
+                        tcpSessions.remove(key)
+                        runCatching { socket.close() }
+                        return@execute
+                    }
+                    socket.connect(java.net.InetSocketAddress(InetAddress.getByAddress(dstIp), dstPort), TCP_CONNECT_MS)
+                    socket.tcpNoDelay = true
+                    session.socket = socket
+                    session.clientWindow = u16(packet, ihl + 14)
+                    // 发送 SYN-ACK 给 client
+                    sendTcpToClient(
+                        session,
+                        flags = FLAG_SYN or FLAG_ACK,
+                        payload = ByteArray(0),
+                        seqIncrement = 1
+                    )
+                    // 启动 socket→TUN 转发
+                    executor.execute { tcpSocketToTunLoop(key, session) }
+                } catch (e: IOException) {
+                    Log.w(TAG, "tcp connect failed: ${e.message}")
+                    // 发送 RST 给客户端
+                    sendTcpToClient(session, flags = FLAG_RST or FLAG_ACK, payload = ByteArray(0), seqIncrement = 0)
+                    tcpSessions.remove(key)
+                    runCatching { socket.close() }
+                }
+            }
+            return
+        }
+
+        if (session == null) {
+            // 未知会话（可能 session 已被清理），发 RST 让 client 重连
+            sendRstTo(srcIp, srcPort, dstIp, dstPort, seq, ack)
+            return
+        }
+
+        // 数据/ACK/FIN
+        if (payloadLen > 0) {
+            try {
+                session.socket?.getOutputStream()?.write(packet, ihl + dataOff, payloadLen)
+                session.socket?.getOutputStream()?.flush()
+            } catch (e: IOException) {
+                Log.w(TAG, "tcp write to socket failed: ${e.message}")
+                sendTcpToClient(session, flags = FLAG_RST or FLAG_ACK, payload = ByteArray(0), seqIncrement = 0)
+                tcpSessions.remove(key)
+                session.close()
+                return
+            }
+            session.clientSeq = (session.clientSeq + payloadLen) and 0xffffffffL
+            // ACK 客户端的数据
+            sendTcpToClient(session, flags = FLAG_ACK, payload = ByteArray(0), seqIncrement = 0)
+        }
+        if (fin) {
+            session.clientSeq = (session.clientSeq + 1) and 0xffffffffL
+            sendTcpToClient(session, flags = FLAG_ACK, payload = ByteArray(0), seqIncrement = 0)
+            // 关闭 socket 写端，等待对端 FIN
+            runCatching { session.socket?.shutdownOutput() }
+        }
+    }
+
+    /** socket 侧 -> TUN 侧：读取真实 socket 数据，封装 TCP 包发回客户端。 */
+    private fun tcpSocketToTunLoop(key: String, session: TcpSession) {
+        val buf = ByteArray(8192)
+        try {
+            val input: InputStream = session.socket?.getInputStream() ?: return
+            while (!Thread.interrupted()) {
+                val n = input.read(buf)
+                if (n < 0) break
+                if (n == 0) continue
+                val payload = buf.copyOfRange(0, n)
+                sendTcpToClient(session, flags = FLAG_ACK or FLAG_PSH, payload = payload, seqIncrement = n.toLong())
+            }
+        } catch (e: IOException) {
+            // socket 关闭
+        }
+        // 对端关闭，发 FIN 给 client
+        sendTcpToClient(session, flags = FLAG_FIN or FLAG_ACK, payload = ByteArray(0), seqIncrement = 1)
+        // 等待 client 的 FIN-ACK 后由 handleTcp 清理，简单起见直接超时清理
+        Thread.sleep(2000)
+        tcpSessions.remove(key)
+        session.close()
+    }
+
+    /** 向 client 发送一个 TCP 段（更新 serverSeq）。 */
+    private fun sendTcpToClient(
+        session: TcpSession,
+        flags: Int,
+        payload: ByteArray,
+        seqIncrement: Long
+    ) {
+        val packet = buildIpTcpPacket(
+            srcIp = session.remoteIp, srcPort = session.remotePort,
+            dstIp = session.clientIp, dstPort = session.clientPort,
+            seq = session.serverSeq,
+            ack = session.clientSeq,
+            flags = flags,
+            window = session.clientWindow.coerceAtLeast(8192),
+            payload = payload
+        )
+        session.serverSeq = (session.serverSeq + seqIncrement) and 0xffffffffL
+        bridge.writeToTun(packet)
+    }
+
+    private fun sendRstTo(
+        srcIp: ByteArray, srcPort: Int,
+        dstIp: ByteArray, dstPort: Int,
+        seq: Long, ack: Long
+    ) {
+        val packet = buildIpTcpPacket(
+            srcIp = dstIp, srcPort = dstPort,
+            dstIp = srcIp, dstPort = srcPort,
+            seq = ack, ack = seq,
+            flags = FLAG_RST or FLAG_ACK,
+            window = 0,
+            payload = ByteArray(0)
+        )
+        bridge.writeToTun(packet)
+    }
+
+    // ------------------------- 包构造工具 -------------------------
+
+    private fun buildIpUdpPacket(
+        srcIp: ByteArray, srcPort: Int,
+        dstIp: ByteArray, dstPort: Int,
+        payload: ByteArray
+    ): ByteArray {
+        val udpLen = 8 + payload.size
+        val totalLen = 20 + udpLen
+        val out = ByteArray(totalLen)
+        // IP header
+        out[0] = 0x45 // ver=4, ihl=5
+        out[1] = 0
+        out[2] = ((totalLen shr 8) and 0xff).toByte()
+        out[3] = (totalLen and 0xff).toByte()
+        out[6] = 0x40 // DF
+        out[8] = 64 // TTL
+        out[9] = IpPacket.PROTO_UDP.toByte()
+        System.arraycopy(srcIp, 0, out, 12, 4)
+        System.arraycopy(dstIp, 0, out, 16, 4)
+        IpPacket.recomputeIpChecksum(out)
+        // UDP header
+        out[20] = ((srcPort shr 8) and 0xff).toByte()
+        out[21] = (srcPort and 0xff).toByte()
+        out[22] = ((dstPort shr 8) and 0xff).toByte()
+        out[23] = (dstPort and 0xff).toByte()
+        out[24] = ((udpLen shr 8) and 0xff).toByte()
+        out[25] = (udpLen and 0xff).toByte()
+        out[26] = 0; out[27] = 0 // checksum=0 (UDP/IPv4 可选)
+        System.arraycopy(payload, 0, out, 28, payload.size)
+        return out
+    }
+
+    private fun buildIpTcpPacket(
+        srcIp: ByteArray, srcPort: Int,
+        dstIp: ByteArray, dstPort: Int,
+        seq: Long, ack: Long,
+        flags: Int, window: Int,
+        payload: ByteArray
+    ): ByteArray {
+        val dataOff = 20 // 不带选项
+        val tcpLen = dataOff + payload.size
+        val totalLen = 20 + tcpLen
+        val out = ByteArray(totalLen)
+        out[0] = 0x45
+        out[1] = 0
+        out[2] = ((totalLen shr 8) and 0xff).toByte()
+        out[3] = (totalLen and 0xff).toByte()
+        out[6] = 0x40
+        out[8] = 64
+        out[9] = IpPacket.PROTO_TCP.toByte()
+        System.arraycopy(srcIp, 0, out, 12, 4)
+        System.arraycopy(dstIp, 0, out, 16, 4)
+        IpPacket.recomputeIpChecksum(out)
+        // TCP header
+        val t = 20
+        out[t] = ((srcPort shr 8) and 0xff).toByte()
+        out[t + 1] = (srcPort and 0xff).toByte()
+        out[t + 2] = ((dstPort shr 8) and 0xff).toByte()
+        out[t + 3] = (dstPort and 0xff).toByte()
+        writeU32(out, t + 4, seq)
+        writeU32(out, t + 8, ack)
+        out[t + 12] = ((dataOff / 4) shl 4).toByte() // data offset
+        out[t + 13] = flags.toByte()
+        out[t + 14] = ((window shr 8) and 0xff).toByte()
+        out[t + 15] = (window and 0xff).toByte()
+        out[t + 16] = 0; out[t + 17] = 0 // checksum 占位
+        out[t + 18] = 0; out[t + 19] = 0 // urgent pointer
+        System.arraycopy(payload, 0, out, t + dataOff, payload.size)
+        IpPacket.recomputeTcpChecksum(out)
+        return out
+    }
+
+    // ----------------------------- 数据类 -----------------------------
+
+    private class UdpSession(
+        val socket: DatagramSocket,
+        val srcIp: ByteArray,
+        val srcPort: Int,
+        val dstIp: ByteArray,
+        val dstPort: Int
+    )
+
+    private class TcpSession(
+        val clientIp: ByteArray,
+        val clientPort: Int,
+        val remoteIp: ByteArray,
+        val remotePort: Int,
+        var clientSeq: Long,
+        var serverSeq: Long
+    ) {
+        @Volatile var socket: Socket? = null
+        @Volatile var clientWindow: Int = 65535
+
+        fun close() {
+            runCatching { socket?.close() }
+        }
+    }
+
+    // ----------------------------- 工具 -----------------------------
+
+    private fun udpKey(srcIp: ByteArray, srcPort: Int, dstIp: ByteArray, dstPort: Int): String =
+        "${IpPacket.ipToString(srcIp)}:$srcPort-${IpPacket.ipToString(dstIp)}:$dstPort"
+
+    private fun tcpKey(srcIp: ByteArray, srcPort: Int, dstIp: ByteArray, dstPort: Int): String =
+        "${IpPacket.ipToString(srcIp)}:$srcPort-${IpPacket.ipToString(dstIp)}:$dstPort"
+
+    private fun u16(buf: ByteArray, off: Int): Int =
+        ((buf[off].toInt() and 0xff) shl 8) or (buf[off + 1].toInt() and 0xff)
+
+    private fun u32(buf: ByteArray, off: Int): Long =
+        ((buf[off].toLong() and 0xff) shl 24) or
+            ((buf[off + 1].toLong() and 0xff) shl 16) or
+            ((buf[off + 2].toLong() and 0xff) shl 8) or
+            (buf[off + 3].toLong() and 0xff)
+
+    private fun writeU32(buf: ByteArray, off: Int, v: Long) {
+        buf[off] = ((v shr 24) and 0xff).toByte()
+        buf[off + 1] = ((v shr 16) and 0xff).toByte()
+        buf[off + 2] = ((v shr 8) and 0xff).toByte()
+        buf[off + 3] = (v and 0xff).toByte()
+    }
+
+    companion object {
+        private const val TAG = "PacketForwarder"
+        private const val UDP_TIMEOUT_MS = 30_000
+        private const val TCP_CONNECT_MS = 10_000
+
+        private const val FLAG_FIN = 0x01
+        private const val FLAG_SYN = 0x02
+        private const val FLAG_RST = 0x04
+        private const val FLAG_PSH = 0x08
+        private const val FLAG_ACK = 0x10
+    }
+}

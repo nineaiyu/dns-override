@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- 蓝色背景 -->
+  <rect width="512" height="512" fill="#1565C0"/>
+  <!-- 白色盾牌 -->
+  <path fill="#FFFFFF" d="M256,80 L160,128 L160,224 C160,313.6 197.12,392.96 256,416 C314.88,392.96 352,313.6 352,224 L352,128 L256,80 Z"/>
+  <!-- 盾牌内蓝色 DNS 横线 -->
+  <rect x="208" y="232" width="96" height="12" fill="#1565C0"/>
+  <rect x="208" y="256" width="96" height="12" fill="#1565C0"/>
+  <rect x="208" y="280" width="64" height="12" fill="#1565C0"/>
+</svg>

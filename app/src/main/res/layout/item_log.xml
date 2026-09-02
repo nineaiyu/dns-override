@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_sm"
+    android:paddingEnd="@dimen/space_sm"
+    android:paddingTop="@dimen/space_xs"
+    android:paddingBottom="@dimen/space_xs">
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        tools:text="14:30:00" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textDomain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Body"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="printhub.dvcloud.xin" />
+
+        <TextView
+            android:id="@+id/textResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="→ 192.168.0.200" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+        android:textColor="?attr/colorPrimary"
+        tools:text="命中" />
+</LinearLayout>

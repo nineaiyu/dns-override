@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 间距系统（8dp 基线） -->
+    <dimen name="space_xxs">4dp</dimen>
+    <dimen name="space_xs">8dp</dimen>
+    <dimen name="space_sm">12dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="space_xxl">48dp</dimen>
+
+    <!-- 圆角（现代柔和） -->
+    <dimen name="radius_sm">12dp</dimen>
+    <dimen name="radius_md">20dp</dimen>
+    <dimen name="radius_lg">28dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+
+    <!-- 卡片/容器 -->
+    <dimen name="card_elevation">0dp</dimen>
+    <dimen name="card_elevation_pressed">2dp</dimen>
+    <dimen name="card_padding">20dp</dimen>
+
+    <!-- 屏幕边距 -->
+    <dimen name="screen_margin">20dp</dimen>
+    <dimen name="screen_margin_compact">16dp</dimen>
+
+    <!-- 字体层级（sp） -->
+    <dimen name="text_display">40sp</dimen>
+    <dimen name="text_headline">26sp</dimen>
+    <dimen name="text_title_lg">20sp</dimen>
+    <dimen name="text_title">16sp</dimen>
+    <dimen name="text_body">15sp</dimen>
+    <dimen name="text_label">13sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+</resources>

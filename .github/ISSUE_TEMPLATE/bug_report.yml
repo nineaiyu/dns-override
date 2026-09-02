@@ -1,0 +1,86 @@
+name: 缺陷报告
+description: 报告一个可复现的问题
+title: "fix: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量填写完整，能大幅缩短定位时间。
+        提交前请先搜索是否已有相同 Issue。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 现象
+      description: 发生了什么？与预期有何差异？
+      placeholder: 开启 VPN 后，访问 example.com 未解析到规则指定的 IP，而是返回真实 IP。
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤
+      description: 请给出可稳定复现的最小步骤
+      placeholder: |
+        1. 新建规则 `example.com` → `192.168.1.100`
+        2. 开启保护
+        3. 浏览器访问 example.com
+        4. 观察首页「最近活动」
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App 版本
+      description: 设置页底部或 APK 文件名中的版本号
+      placeholder: 2.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 设备与系统
+      placeholder: Pixel 7 / Android 14
+    validations:
+      required: true
+
+  - type: dropdown
+    id: upstream
+    attributes:
+      label: 上游 DNS 模式
+      options:
+        - UDP 53
+        - DNS-over-HTTPS
+        - 未开启 VPN
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / 诊断输出
+      description: |
+        设置页 → 诊断 → 「测试解析」/「测试上游」的结果；
+        或 `adb logcat | grep -E "DnsVpnService|DnsInterceptor|TcpFlowHandler"` 的输出。
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 确认项
+      options:
+        - label: 我已在最新版本中确认该问题仍然存在
+          required: true
+        - label: 我已搜索现有 Issue，未发现重复
+          required: true

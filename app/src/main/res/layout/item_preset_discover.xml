@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_md">
+
+    <FrameLayout
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_card">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cloud_download"
+            android:contentDescription="@string/app_name"
+            app:tint="@color/brand_primary"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_md"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Title"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="广告拦截（综合）" />
+
+        <TextView
+            android:id="@+id/textMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="广告拦截 · 社区维护" />
+
+        <TextView
+            android:id="@+id/textDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="合并广告、追踪器与恶意域名的综合 hosts 列表。" />
+
+        <TextView
+            android:id="@+id/textState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textAppearance="@style/TextAppearance.DnsOverride.Caption"
+            android:textColor="@color/brand_primary"
+            tools:text="已添加，点击更新" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,11 @@
+package com.printhub.dnsoverride.service
+
+/**
+ * 由 [DnsVpnService] 实现，把转发回的 IP 包写回 TUN。
+ *
+ * 抽成接口是为了让 [com.printhub.dnsoverride.util.PacketForwarder] 不直接持有
+ * VpnService 类型，便于单元测试时注入假实现。
+ */
+fun interface TunBridge {
+    fun writeToTun(packet: ByteArray)
+}

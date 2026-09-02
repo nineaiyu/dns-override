@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 玻璃拟态圆底：用于 Hero 卡片上的状态图标 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/glass_white_16" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/glass_border" />
+</shape>

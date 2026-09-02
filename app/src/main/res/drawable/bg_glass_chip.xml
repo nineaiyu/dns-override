@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 玻璃拟态胶囊：用于 Hero 卡片上的信息 chip -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/glass_white_10" />
+    <corners android:radius="@dimen/radius_pill" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/glass_border" />
+</shape>

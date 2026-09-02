@@ -1,0 +1,156 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- ============================================================
+         Aurora 主题：Material 3 + 品牌靛蓝
+         沉浸式边到边 + 分层表面 + 柔和大圆角
+         ============================================================ -->
+    <style name="Theme.DnsOverride" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 主色系统 -->
+        <item name="android:colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+
+        <!-- 表面层级：微蓝灰背景，卡片用纯白（浅色）/ 提亮（深色） -->
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorSurfaceContainerLowest">@color/md_theme_light_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_theme_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/md_theme_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/md_theme_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/md_theme_light_surfaceContainerHighest</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="colorOutlineVariant">@color/md_theme_light_outlineVariant</item>
+
+        <!-- 圆角（现代、柔和、更大） -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.DnsOverride.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.DnsOverride.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.DnsOverride.Large</item>
+
+        <!-- 沉浸式系统栏（边到边，由 MainActivity 处理 insets） -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+
+        <!-- 切换动画 -->
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- 组件默认样式 -->
+        <item name="materialCardViewStyle">@style/Widget.DnsOverride.Card</item>
+        <item name="textInputStyle">@style/Widget.DnsOverride.TextField</item>
+        <item name="snackbarStyle">@style/Widget.DnsOverride.Snackbar</item>
+    </style>
+
+    <!-- 圆角形状 token -->
+    <style name="ShapeAppearance.DnsOverride.Small" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="ShapeAppearance.DnsOverride.Medium" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">20dp</item>
+    </style>
+    <style name="ShapeAppearance.DnsOverride.Large" parent="ShapeAppearance.Material3.Corner.Large">
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <!-- 品牌渐变按钮（主 CTA） -->
+    <style name="Widget.DnsOverride.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/brand_gradient</item>
+        <item name="android:textColor">@color/brand_on_primary</item>
+        <item name="cornerRadius">18dp</item>
+        <!-- 用 paddingTop/Bottom 而非 paddingVertical：后者 API 26 起才有 -->
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!-- 通用卡片：纯白/提亮表面 + 细腻描边，替代厚重阴影 -->
+    <style name="Widget.DnsOverride.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/radius_md</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/card_surface</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- 无描边卡片（列表容器等需要更干净表面的场景） -->
+    <style name="Widget.DnsOverride.Card.Flat" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/radius_md</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/card_surface</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!-- 现代化输入框：填充式柔和圆角 -->
+    <style name="Widget.DnsOverride.TextField" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">?attr/colorSurfaceContainerHigh</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_sm</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <!-- 搜索框：胶囊形 -->
+    <style name="Widget.DnsOverride.SearchField" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">?attr/colorSurfaceContainerHigh</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_pill</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_pill</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <!-- Snackbar：圆角浮起 -->
+    <style name="Widget.DnsOverride.Snackbar" parent="Widget.Material3.Snackbar">
+        <item name="cornerRadius">14dp</item>
+    </style>
+
+    <!-- 底部导航选中态：胶囊高亮 -->
+    <style name="Widget.DnsOverride.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="android:height">32dp</item>
+        <item name="android:width">56dp</item>
+        <item name="android:radius">16dp</item>
+        <item name="animationMode">fade</item>
+    </style>
+
+    <!-- 导航栏胶囊选中态（大屏 Rail） -->
+    <style name="Widget.DnsOverride.NavRail.ActiveIndicator" parent="Widget.Material3.NavigationRailView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="android:height">32dp</item>
+        <item name="android:width">56dp</item>
+        <item name="android:radius">16dp</item>
+        <item name="animationMode">fade</item>
+    </style>
+
+    <!-- 区块标题（设置页等分组小标题） -->
+    <style name="Widget.DnsOverride.SectionHeader" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+</resources>

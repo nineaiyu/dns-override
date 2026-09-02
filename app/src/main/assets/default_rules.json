@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "示例规则",
+      "description": "首次启动写入的示例规则，可自由编辑或删除",
+      "rules": [
+        { "domain": "example.com", "ip": "127.0.0.1", "note": "示例：拦截 example.com" },
+        { "domain": "*.test.local", "ip": "192.168.1.100", "note": "示例：通配符解析" }
+      ]
+    },
+    {
+      "name": "printhub-test",
+      "description": "PrintHub 测试服域名解析（指向 192.168.0.200）",
+      "rules": [
+        { "domain": "printhub.dvcloud.xin", "ip": "192.168.0.200", "note": "Hall API + 用户前端" },
+        { "domain": "admin.printhub.dvcloud.xin", "ip": "192.168.0.200", "note": "Admin 管理后台" },
+        { "domain": "agent.printhub.dvcloud.xin", "ip": "192.168.0.200", "note": "Gateway gRPC（Agent 连接）" },
+        { "domain": "cdn.printhub.dvcloud.xin", "ip": "192.168.0.200", "note": "CDN 资源" }
+      ]
+    }
+  ],
+  "activeGroup": "printhub-test"
+}

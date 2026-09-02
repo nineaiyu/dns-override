@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hero 极光渐变：深空蓝对角线性渐变（简洁、稳定，无 radial/centerY 边缘问题） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="linear"
+        android:angle="135"
+        android:startColor="#0B1230"
+        android:centerColor="#22308C"
+        android:centerX="0.5"
+        android:centerY="0.45"
+        android:endColor="#3F2FA8" />
+    <corners android:radius="@dimen/radius_lg" />
+</shape>
