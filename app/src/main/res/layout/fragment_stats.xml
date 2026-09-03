@@ -414,7 +414,7 @@
                 android:id="@+id/editLogSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="搜索域名或结果 IP"
+                android:hint="@string/stats_log_search_hint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:singleLine="true" />

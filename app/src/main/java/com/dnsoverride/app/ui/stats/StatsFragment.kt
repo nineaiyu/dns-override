@@ -102,6 +102,8 @@ class StatsFragment : Fragment() {
         binding.listTopForwarded.layoutManager = LinearLayoutManager(requireContext())
         binding.listLogs.layoutManager = LinearLayoutManager(requireContext())
         binding.listLogs.adapter = logAdapter
+        binding.listTopBlocked.adapter = topBlockedAdapter
+        binding.listTopForwarded.adapter = topForwardedAdapter
 
         // 日志搜索过滤
         binding.editLogSearch.addTextChangedListener(object : android.text.TextWatcher {
@@ -163,34 +165,40 @@ class StatsFragment : Fragment() {
     }
 
     private fun refresh() {
-        val s = store.snapshot()
-        binding.textTotal.text = s.totalQueries.toString()
-        binding.textBlocked.text = s.blockedCount.toString()
-        binding.textForwarded.text = s.forwardedCount.toString()
-        binding.textCacheHits.text = s.cacheHits.toString()
-        val cacheRate = if (s.totalQueries == 0L) 0f else s.cacheHits.toFloat() / s.totalQueries
-        binding.textBlockedRate.text =
-            getString(R.string.stats_cache_rate_value, cacheRate * 100)
+        lifecycleScope.launch {
+            // 读 SharedPreferences / 聚合统计涉及磁盘 IO，全部移到后台线程
+            val (s, trend) = withContext(Dispatchers.IO) {
+                store.snapshot() to store.hourlyTrend()
+            }
+            if (_binding == null) return@launch
 
-        // 环形拦截率图
-        val ratePct = (s.blockedRate * 100).toInt()
-        binding.textRateCenter.text = "$ratePct%"
-        binding.donutChart.setRate(s.blockedRate, animate = true)
+            binding.textTotal.text = s.totalQueries.toString()
+            binding.textBlocked.text = s.blockedCount.toString()
+            binding.textForwarded.text = s.forwardedCount.toString()
+            binding.textCacheHits.text = s.cacheHits.toString()
+            val cacheRate = if (s.totalQueries == 0L) 0f else s.cacheHits.toFloat() / s.totalQueries
+            binding.textBlockedRate.text =
+                getString(R.string.stats_cache_rate_value, cacheRate * 100)
 
-        val empty = s.totalQueries == 0L
-        binding.emptyState.visibility = if (empty) View.VISIBLE else View.GONE
-        binding.cardRate.visibility = if (empty) View.GONE else View.VISIBLE
-        binding.cardTrend.visibility = if (empty) View.GONE else View.VISIBLE
+            // 环形拦截率图
+            val ratePct = (s.blockedRate * 100).toInt()
+            binding.textRateCenter.text = "$ratePct%"
+            binding.donutChart.setRate(s.blockedRate, animate = true)
 
-        // 24h 趋势
-        val trend = store.hourlyTrend()
-        binding.trendChart.setData(trend)
-        val peak = trend.maxOfOrNull { it.total } ?: 0L
-        binding.textTrendSummary.text =
-            getString(R.string.stats_peak, AnimExt.formatCount(peak))
+            val empty = s.totalQueries == 0L
+            binding.emptyState.visibility = if (empty) View.VISIBLE else View.GONE
+            binding.cardRate.visibility = if (empty) View.GONE else View.VISIBLE
+            binding.cardTrend.visibility = if (empty) View.GONE else View.VISIBLE
 
-        binding.listTopBlocked.adapter = StatAdapter(s.topBlockedDomains)
-        binding.listTopForwarded.adapter = StatAdapter(s.topForwardedDomains)
+            // 24h 趋势
+            binding.trendChart.setData(trend)
+            val peak = trend.maxOfOrNull { it.total } ?: 0L
+            binding.textTrendSummary.text =
+                getString(R.string.stats_peak, AnimExt.formatCount(peak))
+
+            topBlockedAdapter.setData(s.topBlockedDomains)
+            topForwardedAdapter.setData(s.topForwardedDomains)
+        }
     }
 
     private fun showMsg(text: String) {
@@ -199,17 +207,28 @@ class StatsFragment : Fragment() {
 
     // ------------------------- Adapters -------------------------
 
-    private inner class StatAdapter(private val items: List<DomainStat>) :
+    private val topBlockedAdapter = StatAdapter()
+    private val topForwardedAdapter = StatAdapter()
+
+    /** Top 域名列表 Adapter：实例复用，数据最多 10 条，直接全量刷新即可。 */
+    private inner class StatAdapter :
         RecyclerView.Adapter<StatAdapter.VH>() {
-        private val maxCount = items.maxOfOrNull { it.count }?.toFloat() ?: 1f
+        private var items: List<DomainStat> = emptyList()
+
+        fun setData(newItems: List<DomainStat>) {
+            items = newItems
+            notifyDataSetChanged()
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             VH(ItemStatBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         override fun getItemCount() = items.size
         override fun onBindViewHolder(h: VH, pos: Int) {
             val item = items[pos]
+            val maxCount = items.maxOfOrNull { it.count }?.toFloat() ?: 1f
             h.b.domain.text = item.domain
             h.b.count.text = AnimExt.formatCount(item.count)
-            h.b.bar.progress = (item.count.toFloat() / maxCount * 100).toInt().coerceAtLeast(4)
+            h.b.bar.progress = (item.count / maxCount * 100).toInt().coerceAtLeast(4)
             h.b.rank.text = (pos + 1).toString()
         }
         inner class VH(val b: ItemStatBinding) : RecyclerView.ViewHolder(b.root)

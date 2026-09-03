@@ -196,7 +196,7 @@
             android:paddingTop="@dimen/space_xs"
             android:paddingBottom="96dp" />
 
-        <!-- 空态 -->
+        <!-- 空态：区分「组为空」与「筛选后为空」，并提供对应引导按钮 -->
         <LinearLayout
             android:id="@+id/emptyState"
             android:layout_width="match_parent"
@@ -223,6 +223,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textEmpty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_md"
@@ -230,6 +231,24 @@
                 android:textAppearance="@style/TextAppearance.DnsOverride.Body"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEmptyAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/rules_empty_add"
+                app:icon="@drawable/ic_add" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEmptyClearFilter"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/rules_empty_clear_filter"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

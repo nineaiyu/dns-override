@@ -190,7 +190,6 @@ class HomeFragment : Fragment() {
             if (isChecked) startVpn() else stopVpn()
         }
 
-        val running2 = state == DnsVpnService.State.RUNNING
         binding.statusTitle.text = when (state) {
             DnsVpnService.State.RUNNING -> getString(R.string.home_status_protected)
             DnsVpnService.State.STARTING -> getString(R.string.state_starting)
@@ -205,11 +204,11 @@ class HomeFragment : Fragment() {
         }
         // 保护中/未保护使用不同盾牌图标，玻璃圆底保持一致，状态由脉冲环传达
         binding.statusIcon.setImageResource(
-            if (running2) R.drawable.ic_shield_check else R.drawable.ic_shield_alert
+            if (running) R.drawable.ic_shield_check else R.drawable.ic_shield_alert
         )
         // 保护中：显示呼吸脉冲环动画；否则隐藏
-        binding.statusPulse.visibility = if (running2) View.VISIBLE else View.GONE
-        if (running2 && binding.statusPulse.animation == null) {
+        binding.statusPulse.visibility = if (running) View.VISIBLE else View.GONE
+        if (running && binding.statusPulse.animation == null) {
             binding.statusPulse.startAnimation(
                 android.view.animation.AnimationUtils.loadAnimation(
                     requireContext(), com.dnsoverride.app.R.anim.pulse

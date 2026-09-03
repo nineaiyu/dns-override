@@ -243,6 +243,8 @@ class RulesFragment : Fragment() {
         binding.btnBatchDelete.setOnClickListener { batchDelete() }
         binding.btnBatchClear.setOnClickListener { exitSelection() }
         binding.imgSelectAll.setOnClickListener { selectAllVisible() }
+        binding.btnEmptyAdd.setOnClickListener { showEditDialog(null) }
+        binding.btnEmptyClearFilter.setOnClickListener { clearFilters() }
 
         // 恢复搜索词与筛选态到控件
         if (filterQuery.isNotEmpty()) binding.editSearch.setText(filterQuery)
@@ -344,10 +346,18 @@ class RulesFragment : Fragment() {
             matchType && matchQuery
         }
         ruleAdapter.submitList(filtered)
-        // 空态：过滤后为空时展示引导（仅当规则组本身非空、确实是被过滤为空）
+        // 空态分两种，给不同的文案与引导按钮：
+        // - 组本身为空 → 引导「添加规则」
+        // - 筛选后为空 → 引导「清空筛选」
         val emptyNow = filtered.isEmpty()
         binding.emptyState.visibility = if (emptyNow) View.VISIBLE else View.GONE
         binding.listRules.visibility = if (emptyNow) View.GONE else View.VISIBLE
+        if (emptyNow) {
+            val noFilter = rules.isEmpty()
+            binding.textEmpty.setText(if (noFilter) R.string.rules_empty else R.string.rules_empty_no_filter)
+            binding.btnEmptyAdd.visibility = if (noFilter) View.VISIBLE else View.GONE
+            binding.btnEmptyClearFilter.visibility = if (noFilter) View.GONE else View.VISIBLE
+        }
     }
 
     /** 在筛选 Chip 上展示各类型规则数量，让用户直观了解分布。 */
@@ -550,14 +560,46 @@ class RulesFragment : Fragment() {
     private fun deleteRule(rule: DnsRule) {
         val groupId = editingGroupId ?: return
         lifecycleScope.launch {
-            withContext(writeDispatcher) {
+            val index = withContext(writeDispatcher) {
                 val group = store.listGroups().firstOrNull { it.id == groupId }
-                    ?: return@withContext
+                    ?: return@withContext -1
+                val idx = group.rules.indexOfFirst { it.id == rule.id }
                 store.upsertGroup(group.copy(rules = group.rules.filterNot { it.id == rule.id }))
                 reloadVpn()
+                idx
             }
             refresh()
+            val root = _binding?.root ?: return@launch
+            if (index < 0) return@launch
+            // 轻量删除：不弹确认框，直接给「撤销」入口，误删一键恢复原位置
+            Ui.snack(
+                root,
+                getString(R.string.rules_deleted_undo, rule.domain),
+                getString(R.string.action_undo)
+            ) {
+                lifecycleScope.launch {
+                    withContext(writeDispatcher) {
+                        val group = store.listGroups().firstOrNull { it.id == groupId }
+                            ?: return@withContext
+                        val restored = group.rules.toMutableList()
+                            .apply { add(index.coerceAtMost(size), rule) }
+                        store.upsertGroup(group.copy(rules = restored))
+                        reloadVpn()
+                    }
+                    refresh()
+                }
+            }
         }
+    }
+
+    /** 清空搜索词与类型筛选，恢复完整列表。 */
+    private fun clearFilters() {
+        filterQuery = ""
+        filterType = null
+        if (_binding == null) return
+        binding.editSearch.setText("")
+        binding.chipAll.isChecked = true
+        applyFilter()
     }
 
     private fun toggleRule(rule: DnsRule, enabled: Boolean) {
@@ -575,13 +617,25 @@ class RulesFragment : Fragment() {
 
     // ------------------------- 订阅 -------------------------
 
+    /**
+     * 构造对话框内嵌输入框容器。
+     * padding 按 dp 计算（AlertDialog 内容区默认边距较挤，需手动补偿），
+     * 不能写死像素值——高密度屏上会小得几乎贴边。
+     */
+    private fun dialogInputContainer(configure: EditText.() -> Unit): Pair<LinearLayout, EditText> {
+        val input = EditText(requireContext()).apply(configure)
+        val d = resources.displayMetrics.density
+        val container = LinearLayout(requireContext()).apply {
+            setPadding((20 * d).toInt(), (8 * d).toInt(), (20 * d).toInt(), 0)
+            addView(input)
+        }
+        return container to input
+    }
+
     private fun showAddSubscriptionDialog() {
-        val input = EditText(requireContext()).apply {
+        val (container, input) = dialogInputContainer {
             hint = getString(R.string.rules_subscription_hint)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-        }
-        val container = LinearLayout(requireContext()).apply {
-            setPadding(56, 32, 56, 16); addView(input)
         }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.rules_subscription_title)
@@ -825,11 +879,8 @@ class RulesFragment : Fragment() {
     }
 
     private fun showNewGroupDialog() {
-        val input = EditText(requireContext()).apply {
+        val (container, input) = dialogInputContainer {
             hint = getString(R.string.rules_new_group_hint)
-        }
-        val container = LinearLayout(requireContext()).apply {
-            setPadding(56, 32, 56, 16); addView(input)
         }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.rules_new_group_title)
@@ -866,10 +917,7 @@ class RulesFragment : Fragment() {
             showMsg(getString(R.string.rules_no_group))
             return
         }
-        val input = EditText(requireContext()).apply { setText(g.name) }
-        val container = LinearLayout(requireContext()).apply {
-            setPadding(56, 32, 56, 16); addView(input)
-        }
+        val (container, input) = dialogInputContainer { setText(g.name) }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.rules_rename_group_title)
             .setView(container)

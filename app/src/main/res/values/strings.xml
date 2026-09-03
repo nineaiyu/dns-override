@@ -91,6 +91,7 @@
     <string name="stats_peak">今日峰值 %1$s 次/时</string>
     <string name="stats_exported">已导出 %1$d 条日志</string>
     <string name="stats_no_logs">暂无日志可导出</string>
+    <string name="stats_log_search_hint">搜索域名或结果 IP</string>
     <string name="log_tag_hit">命中</string>
     <string name="log_tag_forward">转发</string>
     <string name="log_result_arrow">→ %1$s</string>
@@ -114,6 +115,9 @@
     <string name="settings_cache">DNS 缓存</string>
     <string name="settings_about_app">DNS Override 是一款基于 VPN 的本地 DNS 拦截工具，支持 UDP/TCP/DoH，保护你的隐私与网络体验。</string>
     <string name="settings_upstream_hint">留空或全部非法时使用内置列表（8.8.8.8 / 1.1.1.1 / 223.5.5.5）</string>
+    <string name="settings_custom_upstreams_hint">自定义 UDP 上游（逗号分隔）</string>
+    <string name="settings_cache_ttl_hint">应用内缓存有效期（秒）</string>
+    <string name="settings_forward_ttl_field">转发响应 TTL（秒，0 = 系统不缓存）</string>
     <string name="settings_cache_size">缓存容量</string>
     <string name="settings_cache_size_value">%1$d 条</string>
     <string name="settings_forward_ttl_hint">转发上游的响应会改写为该 TTL 再交给系统。过大：切换规则后短暂不生效；为 0：系统每次都重新查询，网络差时明显变慢。建议 10。</string>
@@ -143,6 +147,11 @@
     <string name="rule_edit_title_edit">编辑规则</string>
     <string name="rule_error_domain_invalid">域名格式无效</string>
     <string name="rule_error_ip_invalid">IP 格式无效</string>
+    <string name="rules_empty_no_filter">没有匹配的规则，试试调整搜索或筛选</string>
+    <string name="rules_empty_add">添加规则</string>
+    <string name="rules_empty_clear_filter">清空筛选</string>
+    <string name="rules_deleted_undo">已删除「%1$s」</string>
+    <string name="action_undo">撤销</string>
 
     <!-- 规则页提示文案 -->
     <string name="rules_no_group">请先选择规则组</string>

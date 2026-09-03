@@ -92,7 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_sm"
-                    android:hint="自定义 UDP 上游（逗号分隔）">
+                    android:hint="@string/settings_custom_upstreams_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editCustomUpstreams"
@@ -163,8 +163,7 @@
                 <SeekBar
                     android:id="@+id/seekCacheSize"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="5000" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/textCacheSize"
@@ -178,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_sm"
-                    android:hint="应用内缓存有效期（秒）">
+                    android:hint="@string/settings_cache_ttl_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTtl"
@@ -192,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_sm"
-                    android:hint="转发响应 TTL（秒，0=系统不缓存）">
+                    android:hint="@string/settings_forward_ttl_field">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editForwardTtl"
@@ -382,7 +381,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_sm"
-                    android:hint="要测试的域名（如 example.com）">
+                    android:hint="@string/settings_diag_domain_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editDiagDomain"
